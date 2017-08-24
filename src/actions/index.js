@@ -19,6 +19,23 @@ export default {
 		}
 	},
 
+getMarkers: () => {
+	return(dispatch) => {
+		APIManager
+		.get('/api/markers')
+		.then(response => {
+			console.log('RESPONSE: ' + JSON.stringify(response))
+			dispatch({
+				type: constants.MARKERS_RECEIVED,
+				markers: response.results
+			})
+		})
+		.catch((err) => {
+			console.log('ERROR' + err)
+		})
+	}
+},
+
 	login: (params) => {
 		return (dispatch) => {
 			APIManager

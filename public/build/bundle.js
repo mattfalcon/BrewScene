@@ -21712,7 +21712,7 @@
 	
 	var _Posts2 = _interopRequireDefault(_Posts);
 	
-	var _MapNavigation = __webpack_require__(294);
+	var _MapNavigation = __webpack_require__(293);
 	
 	var _MapNavigation2 = _interopRequireDefault(_MapNavigation);
 	
@@ -31968,6 +31968,20 @@
 			};
 		},
 	
+		getMarkers: function getMarkers() {
+			return function (dispatch) {
+				_utils.APIManager.get('/api/markers').then(function (response) {
+					console.log('RESPONSE: ' + JSON.stringify(response));
+					dispatch({
+						type: _constants2.default.MARKERS_RECEIVED,
+						markers: response.results
+					});
+				}).catch(function (err) {
+					console.log('ERROR' + err);
+				});
+			};
+		},
+	
 		login: function login(params) {
 			return function (dispatch) {
 				_utils.APIManager.post('/account/login', params).then(function (response) {
@@ -32055,7 +32069,9 @@
 	
 		POSTS_RECEIVED: 'POSTS_RECEIVED',
 	
-		POST_CREATED: 'POST_CREATED'
+		POST_CREATED: 'POST_CREATED',
+	
+		MARKERS_RECEIVED: 'MARKERS_RECEIVED'
 	
 	};
 
@@ -32086,7 +32102,7 @@
 	
 	var _Sidebar2 = _interopRequireDefault(_Sidebar);
 	
-	var _Footer = __webpack_require__(293);
+	var _Footer = __webpack_require__(294);
 	
 	var _Footer2 = _interopRequireDefault(_Footer);
 	
@@ -35028,6 +35044,8 @@
 		value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(1);
@@ -35053,7 +35071,8 @@
 			var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this));
 	
 			_this.state = {
-				map: null
+				map: null,
+				openedMarkers: {}
 			};
 			return _this;
 		}
@@ -35066,25 +35085,80 @@
 				this.props.mapMoved(latLng);
 			}
 		}, {
-			key: 'render',
-			value: function render() {
+			key: 'closeMarkerInfo',
+			value: function closeMarkerInfo(id) {
+				var openedMarkers = this.state.openedMarkers;
+				openedMarkers[id] = undefined;
+				this.setState({ openedMarkers: openedMarkers });
+			}
+		}, {
+			key: 'showInfoWindow',
+			value: function showInfoWindow(id) {
+				var openedMarkers = this.state.openedMarkers;
+				openedMarkers[id] = true;
+				this.setState({ openedMarkers: openedMarkers });
+			}
+		}, {
+			key: 'renderInfoWindow',
+			value: function renderInfoWindow(marker) {
 				var _this2 = this;
 	
-				var mapContainer = _react2.default.createElement('div', { style: { minHeight: 600, height: '80%', width: '100%' } });
+				return _react2.default.createElement(
+					_reactGoogleMaps.InfoWindow,
+					{ key: marker._id, onCloseclick: function onCloseclick() {
+							return _this2.closeMarkerInfo(marker._id);
+						} },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'p',
+							null,
+							'Name: ',
+							marker.name
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'Hours: ',
+							marker.hours
+						)
+					)
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this3 = this;
 	
+				var mapContainer = _react2.default.createElement('div', { style: { minHeight: 600, height: '80%', width: '100%' } });
 				return _react2.default.createElement(_reactGoogleMaps.GoogleMapLoader, {
 					containerElement: mapContainer,
-					googleMapElement: _react2.default.createElement(_reactGoogleMaps.GoogleMap, {
-						ref: function ref(map) {
-							if (_this2.state.map != null) return;
+					googleMapElement: _react2.default.createElement(
+						_reactGoogleMaps.GoogleMap,
+						{
+							ref: function ref(map) {
+								if (_this3.state.map != null) return;
 	
-							_this2.setState({ map: map });
-						},
+								_this3.setState({ map: map });
+							},
 	
-						defaultZoom: this.props.zoom,
-						defaultCenter: this.props.center,
-						onDragend: this.mapDragged.bind(this),
-						options: { streetViewControl: false, mapTypeControl: false } }) });
+							defaultZoom: this.props.zoom,
+							defaultCenter: this.props.center,
+							onDragend: this.mapDragged.bind(this),
+							options: { streetViewControl: false, mapTypeControl: false } },
+						this.props.markers.map(function (marker) {
+							return _react2.default.createElement(
+								_reactGoogleMaps.Marker,
+								_extends({
+									onClick: function onClick() {
+										return _this3.showInfoWindow(marker._id);
+									}
+								}, marker),
+								_this3.state.openedMarkers[marker._id] ? _this3.renderInfoWindow(marker) : null
+							);
+						})
+					) });
 			}
 		}]);
 	
@@ -39510,7 +39584,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _MapNavigation = __webpack_require__(294);
+	var _MapNavigation = __webpack_require__(293);
 	
 	var _MapNavigation2 = _interopRequireDefault(_MapNavigation);
 	
@@ -39553,6 +39627,127 @@
 
 /***/ },
 /* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _view = __webpack_require__(234);
+	
+	var _reactRedux = __webpack_require__(194);
+	
+	var _actions = __webpack_require__(232);
+	
+	var _actions2 = _interopRequireDefault(_actions);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var MapNavigation = function (_Component) {
+		_inherits(MapNavigation, _Component);
+	
+		function MapNavigation() {
+			_classCallCheck(this, MapNavigation);
+	
+			return _possibleConstructorReturn(this, (MapNavigation.__proto__ || Object.getPrototypeOf(MapNavigation)).apply(this, arguments));
+		}
+	
+		_createClass(MapNavigation, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _this2 = this;
+	
+				this.getCurrentPosition(function () {
+					_this2.props.getMarkers();
+				});
+			}
+		}, {
+			key: 'getCurrentPosition',
+			value: function getCurrentPosition(callback) {
+				var _this3 = this;
+	
+				if (!navigator.geolocation) return callback();
+				navigator.geolocation.getCurrentPosition(function (position) {
+					var location = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					};
+					_this3.setNewLocation(location);
+					callback();
+				}, function () {
+					return callback();
+				});
+			}
+		}, {
+			key: 'setNewLocation',
+			value: function setNewLocation(location) {
+				//		console.log('setNewLocation: '+JSON.stringify(location))
+				this.props.updateCurrentLocation(location);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				if (this.props.markers.loading) {
+					return _react2.default.createElement(
+						'div',
+						null,
+						'Loading...'
+					);
+				}
+	
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_view.Map, {
+						center: this.props.posts.currentLocation,
+						zoom: 14,
+						markers: this.props.markers.markers,
+						mapMoved: this.setNewLocation.bind(this)
+					})
+				);
+			}
+		}]);
+	
+		return MapNavigation;
+	}(_react.Component);
+	
+	var stateToProps = function stateToProps(state) {
+		return {
+			posts: state.post,
+			markers: state.markers
+		};
+	};
+	
+	var dispatchToProps = function dispatchToProps(dispatch) {
+		return {
+			updateCurrentLocation: function updateCurrentLocation(location) {
+				return dispatch(_actions2.default.updateCurrentLocation(location));
+			},
+			getMarkers: function getMarkers() {
+				return dispatch(_actions2.default.getMarkers());
+			}
+	
+		};
+	};
+	
+	exports.default = (0, _reactRedux.connect)(stateToProps, dispatchToProps)(MapNavigation);
+
+/***/ },
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -39679,88 +39874,6 @@
 	exports.default = Footer;
 
 /***/ },
-/* 294 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _view = __webpack_require__(234);
-	
-	var _reactRedux = __webpack_require__(194);
-	
-	var _actions = __webpack_require__(232);
-	
-	var _actions2 = _interopRequireDefault(_actions);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var MapNavigation = function (_Component) {
-		_inherits(MapNavigation, _Component);
-	
-		function MapNavigation() {
-			_classCallCheck(this, MapNavigation);
-	
-			return _possibleConstructorReturn(this, (MapNavigation.__proto__ || Object.getPrototypeOf(MapNavigation)).apply(this, arguments));
-		}
-	
-		_createClass(MapNavigation, [{
-			key: 'setNewLocation',
-			value: function setNewLocation(location) {
-				//		console.log('setNewLocation: '+JSON.stringify(location))
-				this.props.updateCurrentLocation(location);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-	
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_view.Map, {
-						center: this.props.posts.currentLocation,
-						zoom: 14,
-						mapMoved: this.setNewLocation.bind(this) })
-				);
-			}
-		}]);
-	
-		return MapNavigation;
-	}(_react.Component);
-	
-	var stateToProps = function stateToProps(state) {
-		return {
-			posts: state.post
-		};
-	};
-	
-	var dispatchToProps = function dispatchToProps(dispatch) {
-		return {
-			updateCurrentLocation: function updateCurrentLocation(location) {
-				return dispatch(_actions2.default.updateCurrentLocation(location));
-			}
-	
-		};
-	};
-	
-	exports.default = (0, _reactRedux.connect)(stateToProps, dispatchToProps)(MapNavigation);
-
-/***/ },
 /* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -39885,7 +39998,8 @@
 		configureStore: function configureStore() {
 			var reducers = (0, _redux.combineReducers)({
 				post: _reducers.postReducer,
-				account: _reducers.accountReducer
+				account: _reducers.accountReducer,
+				markers: _reducers.markersReducer
 			});
 	
 			store = (0, _redux.createStore)(reducers, (0, _redux.applyMiddleware)(_reduxThunk2.default));
@@ -39935,7 +40049,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.accountReducer = exports.postReducer = undefined;
+	exports.markersReducer = exports.accountReducer = exports.postReducer = undefined;
 	
 	var _postReducer = __webpack_require__(299);
 	
@@ -39945,10 +40059,15 @@
 	
 	var _accountReducer2 = _interopRequireDefault(_accountReducer);
 	
+	var _markersReducer = __webpack_require__(301);
+	
+	var _markersReducer2 = _interopRequireDefault(_markersReducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.postReducer = _postReducer2.default;
 	exports.accountReducer = _accountReducer2.default;
+	exports.markersReducer = _markersReducer2.default;
 
 /***/ },
 /* 299 */
@@ -40037,6 +40156,48 @@
 				updated['user'] = action.user;
 				return updated;
 	
+			default:
+				return updated;
+	
+		}
+	};
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _constants = __webpack_require__(233);
+	
+	var _constants2 = _interopRequireDefault(_constants);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var initialState = {
+		currentLocation: {
+			lat: 40.7504753,
+			lng: -73.9932668
+		},
+		markers: null,
+		loading: true
+	};
+	
+	exports.default = function () {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+		var action = arguments[1];
+	
+		var updated = Object.assign({}, state);
+	
+		switch (action.type) {
+			case _constants2.default.MARKERS_RECEIVED:
+				updated['markers'] = action.markers;
+				updated['loading'] = false;
+				return updated;
 			default:
 				return updated;
 	
