@@ -35122,6 +35122,12 @@
 							null,
 							'Hours: ',
 							marker.hours
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'Weekend: ',
+							marker.hourstwo
 						)
 					)
 				);
