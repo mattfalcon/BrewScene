@@ -30,12 +30,17 @@ class Map extends Component {
 	}
 
 	renderInfoWindow(marker) {
+		var divStyle = {
+			color: 'blue',
+			fontWeight: 'bold',
+		}
 		return (
 			<InfoWindow key={marker._id} onCloseclick={() => this.closeMarkerInfo(marker._id)}>
 				<div>
-					<p>Name: {marker.name}</p>
-					<p>Hours: {marker.hours}</p>
-					<p>Weekend: {marker.hourstwo}</p>
+					<br/>
+					<p><div style={divStyle}>Name: {marker.name}</div>
+					<div style={divStyle}>Hours: {marker.hours} </div> 
+					<div style={divStyle}> Weekend Hours: {marker.hourstwo}</div> </p>
 				</div>
 			</InfoWindow>
 		);

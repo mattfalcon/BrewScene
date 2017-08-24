@@ -40,7 +40,7 @@ class MapNavigation extends Component {
 			<div>
 				<Map 
 					center={this.props.posts.currentLocation}
-					zoom={14} 
+					zoom={10} 
 					markers={this.props.markers.markers}
 					mapMoved={this.setNewLocation.bind(this)}
 					 />

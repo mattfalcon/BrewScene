@@ -35103,6 +35103,10 @@
 			value: function renderInfoWindow(marker) {
 				var _this2 = this;
 	
+				var divStyle = {
+					color: 'blue',
+					fontWeight: 'bold'
+				};
 				return _react2.default.createElement(
 					_reactGoogleMaps.InfoWindow,
 					{ key: marker._id, onCloseclick: function onCloseclick() {
@@ -35111,23 +35115,30 @@
 					_react2.default.createElement(
 						'div',
 						null,
+						_react2.default.createElement('br', null),
 						_react2.default.createElement(
 							'p',
 							null,
-							'Name: ',
-							marker.name
-						),
-						_react2.default.createElement(
-							'p',
-							null,
-							'Hours: ',
-							marker.hours
-						),
-						_react2.default.createElement(
-							'p',
-							null,
-							'Weekend: ',
-							marker.hourstwo
+							_react2.default.createElement(
+								'div',
+								{ style: divStyle },
+								'Name: ',
+								marker.name
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: divStyle },
+								'Hours: ',
+								marker.hours,
+								' '
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: divStyle },
+								' Weekend Hours: ',
+								marker.hourstwo
+							),
+							' '
 						)
 					)
 				);
@@ -39720,7 +39731,7 @@
 					null,
 					_react2.default.createElement(_view.Map, {
 						center: this.props.posts.currentLocation,
-						zoom: 14,
+						zoom: 10,
 						markers: this.props.markers.markers,
 						mapMoved: this.setNewLocation.bind(this)
 					})
