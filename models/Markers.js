@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var MarkersSchema = new Schema({
   name:  String,
-  hours: Number,
+  hours: String,
   location: {
     lag: Number,
     lat:  Number
