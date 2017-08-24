@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var MarkersSchema = new Schema({
   name:  String,
   hours: String,
+  hourstwo: String,
   location: {
     lag: Number,
     lat:  Number

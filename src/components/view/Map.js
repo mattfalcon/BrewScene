@@ -34,7 +34,8 @@ class Map extends Component {
 			<InfoWindow key={marker._id} onCloseclick={() => this.closeMarkerInfo(marker._id)}>
 				<div>
 					<p>Name: {marker.name}</p>
-					<p>Hours: {marker.hours}</p>
+					<p>Hours: {marker.hours},
+					   Weekend: {marker.hourstwo}</p>
 				</div>
 			</InfoWindow>
 		);
