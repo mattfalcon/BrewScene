@@ -39,7 +39,7 @@ class Map extends Component {
 				<div>
 					<br/>
 					<p><div style={divStyle}>Name: {marker.name}</div>
-					<div style={divStyle}>Hours: {marker.hours} </div> 
+					<div style={divStyle}>Weekly Hours: {marker.hours} </div> 
 					<div style={divStyle}> Weekend Hours: {marker.hourstwo}</div> </p>
 				</div>
 			</InfoWindow>

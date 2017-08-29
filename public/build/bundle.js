@@ -21646,7 +21646,7 @@
 											),
 											'1234 Somewhere Rd.',
 											_react2.default.createElement('br', null),
-											'Nashville, TN 00000',
+											'Houston, TX 00000',
 											_react2.default.createElement('br', null),
 											'United States'
 										),
@@ -21679,7 +21679,7 @@
 											_react2.default.createElement(
 												'a',
 												{ href: '#' },
-												'hello@untitled.tld'
+												'BrewScene@untitled.tld'
 											)
 										)
 									)
@@ -21854,7 +21854,7 @@
 										_react2.default.createElement(
 											'td',
 											null,
-											_react2.default.createElement('img', { style: { width: 64 }, src: post.image })
+											_react2.default.createElement('img', { style: { width: 70 }, src: post.image })
 										),
 										_react2.default.createElement(
 											'td',
@@ -32272,7 +32272,7 @@
 						_react2.default.createElement(
 							'div',
 							{ className: '6u 12u$(small)' },
-							_react2.default.createElement('img', { style: { width: 100, float: 'right', marginTop: 12 }, src: this.state.post.image })
+							_react2.default.createElement('img', { style: { width: 200, float: 'right', marginTop: 12 }, src: this.state.post.image })
 						)
 					),
 					_react2.default.createElement('br', null),
@@ -35128,7 +35128,7 @@
 							_react2.default.createElement(
 								'div',
 								{ style: divStyle },
-								'Hours: ',
+								'Weekly Hours: ',
 								marker.hours,
 								' '
 							),

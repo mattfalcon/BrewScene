@@ -60,7 +60,7 @@ class Posts extends Component {
 						list.map((post, i) => {
 						return (
 						<tr key={post.id}>
-							<td><img style={{width:64}} src={post.image} /></td>
+							<td><img style={{width:70}} src={post.image} /></td>
 							<td>{post.caption}</td>
 							<td>{post.timestamp}</td>
 						</tr>

@@ -40,7 +40,7 @@ class Home extends Component {
 									<li>
 										<h3 className="icon fa-home"><span className="label">Address</span></h3>
 										1234 Somewhere Rd.<br />
-										Nashville, TN 00000<br />
+										Houston, TX 00000<br />
 										United States
 									</li>
 									<li>
@@ -49,7 +49,7 @@ class Home extends Component {
 									</li>
 									<li>
 										<h3 className="icon fa-envelope-o"><span className="label">Email</span></h3>
-										<a href="#">hello@untitled.tld</a>
+										<a href="#">BrewScene@untitled.tld</a>
 									</li>
 								</ul>
 							</div>

@@ -97,7 +97,7 @@ class CreatePost extends Component {
 				<button className="button special small" onClick={this.submitPost.bind(this)} style={{marginTop:12}}>Submit</button>
 				</div>
 				<div className="6u 12u$(small)">
-					<img style={{width: 100, float: 'right', marginTop:12}} src={this.state.post.image} />
+					<img style={{width: 200, float: 'right', marginTop:12}} src={this.state.post.image} />
 				</div>	
 				</div>
 				<br /> <hr />
